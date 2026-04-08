@@ -69,25 +69,28 @@
     </div>
 
     <script>
-        (function() {
-            const appScheme = "curiousmind://"; 
-            const storeUrl = "https://play.google.com/store/apps/details?id=com.buildweb.go.CuriousMind";
-            
-            // 1. Try to open the app immediately
-            window.location.href = appScheme;
+    (function() {
+        const packageName = "com.buildweb.go.CuriousMind";
+        const storeUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+        
+        // This is the "Chrome Intent" - the most reliable way to open Android apps from a browser
+        const intentUrl = `intent://#Intent;scheme=curiousmind;package=${packageName};end`;
 
-            // 2. Fallback logic
-            const start = Date.now();
-            setTimeout(function() {
-                // If the user is still on this page after 2 seconds, 
-                // it means the app probably didn't open.
-                if (Date.now() - start < 2500) {
-                    // Optional: Auto-redirect to store 
-                    // window.location.href = storeUrl; 
-                }
-            }, 2000);
-        })();
-    </script>
+        // 1. Try to trigger the intent
+        window.location.href = intentUrl;
+
+        // 2. Fallback to Play Store if the app doesn't open
+        const start = Date.now();
+        setTimeout(function() {
+            if (Date.now() - start < 2500) {
+                // User is still here, they likely don't have the app.
+                // We stay on the page so they can click the Play Store button manually,
+                // or you can uncomment the line below to auto-redirect:
+                // window.location.href = storeUrl;
+            }
+        }, 2000);
+    })();
+</script>
 
 </body>
 </html>
