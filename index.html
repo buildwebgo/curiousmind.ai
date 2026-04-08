@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curious Mind - Brain Workout</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background: #1e1e1e;
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 22%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        h1 { font-size: 24px; margin: 10px 0; color: #FFD700; }
+        p { font-size: 16px; color: #b3b3b3; line-height: 1.5; }
+        
+        .playstore-button {
+            margin-top: 30px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .playstore-button img {
+            width: 180px;
+        }
+        .playstore-button:hover {
+            transform: scale(1.05);
+        }
+        .status-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="https://play-lh.googleusercontent.com/R08bWEWLzffwqVWHsGNmDg2m98dkjnqn_4Q9J2JJ3IigaDhFQvDiM0nUs0v62bmHmL0=s48-rw" alt="Curious Mind" class="app-icon">
+        
+        <h1>Curious Mind</h1>
+        <p>Your daily brain workout is ready! Level up your logic and math skills with fun challenges.</p>
+
+        <a href="https://play.google.com/store/apps/details?id=com.buildweb.go.CuriousMind" class="playstore-button">
+            <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+        </a>
+
+        <div class="status-text">Opening the app... if it doesn't open, tap the button above.</div>
+    </div>
+
+    <script>
+        (function() {
+            const appScheme = "curiousmind://"; 
+            const storeUrl = "https://play.google.com/store/apps/details?id=com.buildweb.go.CuriousMind";
+            
+            // 1. Try to open the app immediately
+            window.location.href = appScheme;
+
+            // 2. Fallback logic
+            const start = Date.now();
+            setTimeout(function() {
+                // If the user is still on this page after 2 seconds, 
+                // it means the app probably didn't open.
+                if (Date.now() - start < 2500) {
+                    // Optional: Auto-redirect to store 
+                    // window.location.href = storeUrl; 
+                }
+            }, 2000);
+        })();
+    </script>
+
+</body>
+</html>
