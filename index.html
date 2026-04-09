@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curious Mind - Brain Workout</title>
+
+    <!-- Google Analytics -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWGB99VXS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-BBWGB99VXS');
+    </script>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,13 +31,15 @@
             text-align: center;
             padding: 20px;
         }
+
         .container {
             max-width: 400px;
             background: #1e1e1e;
             padding: 40px 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+
         .app-icon {
             width: 100px;
             height: 100px;
@@ -32,20 +47,33 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
-        h1 { font-size: 24px; margin: 10px 0; color: #FFD700; }
-        p { font-size: 16px; color: #b3b3b3; line-height: 1.5; }
-        
+
+        h1 {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #FFD700;
+        }
+
+        p {
+            font-size: 16px;
+            color: #b3b3b3;
+            line-height: 1.5;
+        }
+
         .playstore-button {
             margin-top: 30px;
             display: inline-block;
             transition: transform 0.2s;
         }
+
         .playstore-button img {
             width: 180px;
         }
+
         .playstore-button:hover {
             transform: scale(1.05);
         }
+
         .status-text {
             font-size: 12px;
             color: #666;
@@ -53,44 +81,95 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
-        <img src="https://play-lh.googleusercontent.com/R08bWEWLzffwqVWHsGNmDg2m98dkjnqn_4Q9J2JJ3IigaDhFQvDiM0nUs0v62bmHmL0=s48-rw" alt="Curious Mind" class="app-icon">
-        
+        <img src="https://play-lh.googleusercontent.com/R08bWEWLzffwqVWHsGNmDg2m98dkjnqn_4Q9J2JJ3IigaDhFQvDiM0nUs0v62bmHmL0=s48-rw"
+            alt="Curious Mind" class="app-icon">
+
         <h1>Curious Mind</h1>
         <p>Your daily brain workout is ready! Level up your logic and math skills with fun challenges.</p>
 
-        <a href="https://play.google.com/store/apps/details?id=com.buildweb.go.CuriousMind" class="playstore-button">
-            <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+        <a href="https://play.google.com/store/apps/details?id=com.buildweb.go.CuriousMind" class="playstore-button"
+            onclick="gtag('event', 'click', { event_category: 'engagement', event_label: 'play_store_button' })">
+            <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                alt="Get it on Google Play">
         </a>
 
         <div class="status-text">Opening the app... if it doesn't open, tap the button above.</div>
     </div>
 
     <script>
-    (function() {
-        const packageName = "com.buildweb.go.CuriousMind";
-        const storeUrl = "https://play.google.com/store/apps/details?id=" + packageName;
-        
-        // This is the "Chrome Intent" - the most reliable way to open Android apps from a browser
-        const intentUrl = `intent://#Intent;scheme=curiousmind;package=${packageName};end`;
+        (function () {
+            const packageName = "com.buildweb.go.CuriousMind";
+            const storeUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+            const intentUrl = `intent://#Intent;scheme=curiousmind;package=${packageName};end`;
 
-        // 1. Try to trigger the intent
-        window.location.href = intentUrl;
+                let fallbackTriggered = false;
+            let appOpenedSent = false;
+            const start = Date.now();
 
-        // 2. Fallback to Play Store if the app doesn't open
-        const start = Date.now();
-        setTimeout(function() {
-            if (Date.now() - start < 2500) {
-                // User is still here, they likely don't have the app.
-                // We stay on the page so they can click the Play Store button manually,
-                // or you can uncomment the line below to auto-redirect:
-                // window.location.href = storeUrl;
+            function sendAnalyticsEvent(eventName, params) {
+                try {
+                    gtag('event', eventName, Object.assign({
+                        event_category: 'engagement'
+                    }, params || {}, {
+                        transport_type: 'beacon'
+                    }));
+                } catch (error) {
+                    console.error('Analytics event failed:', error);
+                }
             }
-        }, 2000);
-    })();
-</script>
+
+            const maxAppOpenDetectTime = 1500;
+
+            sendAnalyticsEvent('user_visited', {
+                event_label: 'landing_page_visit'
+            });
+
+            function markAppOpened() {
+                if (!fallbackTriggered && !appOpenedSent && Date.now() - start < maxAppOpenDetectTime) {
+                    appOpenedSent = true;
+                    sendAnalyticsEvent('app_opened', {
+                        event_label: 'app_open_success'
+                    });
+                }
+            }
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden && !fallbackTriggered) {
+                    markAppOpened();
+                }
+            });
+
+            window.addEventListener('pagehide', function () {
+                if (!fallbackTriggered) {
+                    markAppOpened();
+                }
+            });
+
+            window.location.href = intentUrl;
+
+            setTimeout(function () {
+                if (Date.now() - start < 2500 && !appOpenedSent) {
+                    fallbackTriggered = true;
+                    sendAnalyticsEvent('redirect_to_play_store', {
+                        event_label: 'no_app_detected'
+                    });
+                    window.location.href = storeUrl;
+                }
+            }, 2000);
+
+            window.addEventListener('error', function (event) {
+                sendAnalyticsEvent('tracking_error', {
+                    event_label: 'script_error',
+                    description: event.message || 'unknown error'
+                });
+            });
+        })();
+    </script>
 
 </body>
+
 </html>
